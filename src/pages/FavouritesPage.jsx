@@ -44,8 +44,6 @@ function FavouritesPage() {
         });
     };
 
-    setFavClicked(false);
-
     ferthFavorites();
   }, [favClicked]);
 
@@ -78,7 +76,8 @@ function FavouritesPage() {
         {favorites &&
           favorites.map((favMealArray) => {
             const favMeal = favMealArray[0];
-            return (
+
+            !favMeal.isEmpty() ? (
               <RecipeCard
                 key={favMeal.idMeal}
                 mealId={favMeal.idMeal}
@@ -88,7 +87,7 @@ function FavouritesPage() {
                 isFavorite={true}
                 remove={removeFromFavorites}
               />
-            );
+            ) : null;
           })}
       </div>
 
