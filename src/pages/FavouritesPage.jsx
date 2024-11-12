@@ -73,7 +73,7 @@ function FavouritesPage() {
       <NavBar currentPage="fav" />
 
       <div className="w-full px-40 flex flex-wrap gap-7 mt-10">
-        {favorites &&
+        {favorites && favorites.length > 0 ? (
           favorites
             .filter((favMealArray) => favMealArray && favMealArray[0])
             .map((favMealArray) => {
@@ -90,7 +90,10 @@ function FavouritesPage() {
                   remove={removeFromFavorites}
                 />
               );
-            })}
+            })
+        ) : (
+          <p>No favorites available</p> // Render message when array is empty
+        )}
       </div>
 
       {isLoading && (
