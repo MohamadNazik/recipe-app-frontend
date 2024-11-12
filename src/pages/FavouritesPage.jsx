@@ -77,7 +77,7 @@ function FavouritesPage() {
           favorites.map((favMealArray) => {
             const favMeal = favMealArray[0];
 
-            !favMeal.isEmpty() ? (
+            return favMeal ? (
               <RecipeCard
                 key={favMeal.idMeal}
                 mealId={favMeal.idMeal}
