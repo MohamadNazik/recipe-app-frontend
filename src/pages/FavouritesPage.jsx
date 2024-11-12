@@ -11,8 +11,6 @@ const baseUrl = import.meta.env.VITE_BACKEND_URI;
 
 function FavouritesPage() {
   const [favorites, setFavorites] = useState([]);
-  const [favClicked, setFavClicked] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -25,47 +23,46 @@ function FavouritesPage() {
       return;
     }
 
-    const ferthFavorites = async () => {
+    const fetchFavorites = async () => {
       setIsLoading(true);
-      await axios
-        .get(`${baseUrl}/favorites`, {
+      try {
+        const res = await axios.get(`${baseUrl}/favorites`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-        .then((res) => {
-          // console.log(res.data.data);
-          setFavorites(res.data.data);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          // console.log(err);
-          setIsLoading(false);
         });
+        setFavorites(res.data.data);
+      } catch (error) {
+        console.error("Error fetching favorites:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    ferthFavorites();
-  }, [favClicked]);
+    fetchFavorites();
+  }, []);
 
   const removeFromFavorites = async (mealId) => {
     const token = localStorage.getItem("token");
-    await axios
-      .post(
+    try {
+      await axios.post(
         `${baseUrl}/favorites/remove`,
-        { mealId: mealId },
+        { mealId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
-      .then((res) => {
-        setFavClicked((prev) => !prev);
-        // console.log(res);
-      })
-      .catch((err) => {
-        // console.log(err);
-      });
+      );
+      // Directly update favorites state by filtering out removed meal
+      setFavorites((prevFavorites) =>
+        prevFavorites.filter(
+          (favMealArray) => favMealArray[0]?.idMeal !== mealId
+        )
+      );
+    } catch (error) {
+      console.error("Error removing favorite:", error);
+    }
   };
 
   return (
@@ -74,25 +71,23 @@ function FavouritesPage() {
 
       <div className="w-full px-40 flex flex-wrap gap-7 mt-10">
         {favorites && favorites.length > 0 ? (
-          favorites
-            .filter((favMealArray) => favMealArray && favMealArray[0])
-            .map((favMealArray) => {
-              const favMeal = favMealArray[0];
+          favorites.map((favMealArray) => {
+            const favMeal = favMealArray[0];
 
-              return (
-                <RecipeCard
-                  key={favMeal.idMeal}
-                  mealId={favMeal.idMeal}
-                  img={favMeal.strMealThumb}
-                  category={favMeal.strCategory}
-                  recipeName={favMeal.strMeal}
-                  isFavorite={true}
-                  remove={removeFromFavorites}
-                />
-              );
-            })
+            return (
+              <RecipeCard
+                key={favMeal.idMeal}
+                mealId={favMeal.idMeal}
+                img={favMeal.strMealThumb}
+                category={favMeal.strCategory}
+                recipeName={favMeal.strMeal}
+                isFavorite={true}
+                remove={removeFromFavorites}
+              />
+            );
+          })
         ) : (
-          <p>No favorites available</p> // Render message when array is empty
+          <p>No favorites available</p>
         )}
       </div>
 
