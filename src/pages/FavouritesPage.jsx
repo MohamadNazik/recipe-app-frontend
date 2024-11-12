@@ -74,21 +74,23 @@ function FavouritesPage() {
 
       <div className="w-full px-40 flex flex-wrap gap-7 mt-10">
         {favorites &&
-          favorites.map((favMealArray) => {
-            const favMeal = favMealArray[0];
+          favorites
+            .filter((favMealArray) => favMealArray && favMealArray[0])
+            .map((favMealArray) => {
+              const favMeal = favMealArray[0];
 
-            return favMeal ? (
-              <RecipeCard
-                key={favMeal.idMeal}
-                mealId={favMeal.idMeal}
-                img={favMeal.strMealThumb}
-                category={favMeal.strCategory}
-                recipeName={favMeal.strMeal}
-                isFavorite={true}
-                remove={removeFromFavorites}
-              />
-            ) : null;
-          })}
+              return (
+                <RecipeCard
+                  key={favMeal.idMeal}
+                  mealId={favMeal.idMeal}
+                  img={favMeal.strMealThumb}
+                  category={favMeal.strCategory}
+                  recipeName={favMeal.strMeal}
+                  isFavorite={true}
+                  remove={removeFromFavorites}
+                />
+              );
+            })}
       </div>
 
       {isLoading && (
