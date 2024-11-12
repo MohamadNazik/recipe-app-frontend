@@ -44,6 +44,8 @@ function FavouritesPage() {
         });
     };
 
+    setFavClicked(false);
+
     ferthFavorites();
   }, [favClicked]);
 
