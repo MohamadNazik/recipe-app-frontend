@@ -54,7 +54,6 @@ function FavouritesPage() {
           },
         }
       );
-      // Directly update favorites state by filtering out removed meal
       setFavorites((prevFavorites) =>
         prevFavorites.filter(
           (favMealArray) => favMealArray[0]?.idMeal !== mealId
