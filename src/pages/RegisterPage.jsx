@@ -62,14 +62,16 @@ function RegisterPage() {
         }
       })
       .catch((err) => {
-        if (err.response.data.errors) {
-          setErrMsg(err.response.data.errors[0].msg);
-          setIsLoading(false);
-        } else {
-          setErrMsg(err.response.data.message);
-          navigate("/register");
-          setIsLoading(false);
-        }
+        console.log(err);
+        setIsLoading(false);
+        // if (err.response.data.errors) {
+        //   setErrMsg(err.response.data.errors[0].msg);
+        //   setIsLoading(false);
+        // } else {
+        //   setErrMsg(err.response.data.message);
+        //   navigate("/register");
+        //   setIsLoading(false);
+        // }
       });
   };
 
