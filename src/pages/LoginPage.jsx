@@ -62,9 +62,14 @@ function LoginPage() {
         }
       })
       .catch((err) => {
-        setError(err.response.data.message);
-        navigate("/");
-        setIsLoading(false);
+        if (err.response.data.errors) {
+          setError(err.response.data.errors[0].msg);
+          setIsLoading(false);
+        } else {
+          setError(err.response.data.message);
+          navigate("/");
+          setIsLoading(false);
+        }
       });
   };
 
