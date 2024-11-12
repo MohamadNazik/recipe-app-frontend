@@ -60,7 +60,7 @@ function FavouritesPage() {
         )
       );
     } catch (error) {
-      console.error("Error removing favorite:", error);
+      // console.error("Error removing favorite:", error);
     }
   };
 

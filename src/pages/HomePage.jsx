@@ -15,7 +15,6 @@ function HomePage() {
   const [currentCategory, setCurrentCategory] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const [favClicked, setFavClicked] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -67,7 +66,7 @@ function HomePage() {
         });
     };
     ferchFavorites();
-  }, [favClicked]);
+  }, []);
 
   useEffect(() => {
     const fetchRecipesByCategory = async () => {
@@ -91,43 +90,50 @@ function HomePage() {
 
   const addToFavorites = async (mealId) => {
     const token = localStorage.getItem("token");
-    await axios
-      .post(
+    try {
+      await axios.post(
         `${baseUrl}/favorites/add`,
-        { mealId: mealId },
+        { mealId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
-      .then((res) => {
-        setFavClicked((prev) => !prev);
-        // console.log(res);
-      })
-      .catch((err) => {
-        // console.log(err);
-      });
+      );
+
+      setFavorites((prevFavorites) => [
+        ...prevFavorites,
+        [
+          {
+            idMeal: mealId,
+            strMeal: recipes.find((r) => r.idMeal === mealId).strMeal,
+          },
+        ],
+      ]);
+    } catch (error) {
+      // console.error("Error adding favorite:", error);
+    }
   };
+
   const removeFromFavorites = async (mealId) => {
     const token = localStorage.getItem("token");
-    await axios
-      .post(
+    try {
+      await axios.post(
         `${baseUrl}/favorites/remove`,
-        { mealId: mealId },
+        { mealId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
-      .then((res) => {
-        setFavClicked((prev) => !prev);
-        // console.log(res);
-      })
-      .catch((err) => {
-        // console.log(err);
-      });
+      );
+
+      setFavorites((prevFavorites) =>
+        prevFavorites.filter((mealArray) => mealArray[0]?.idMeal !== mealId)
+      );
+    } catch (error) {
+      // console.error("Error removing favorite:", error);
+    }
   };
 
   return (
